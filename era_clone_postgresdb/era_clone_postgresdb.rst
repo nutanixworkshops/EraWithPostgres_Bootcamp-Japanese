@@ -26,11 +26,11 @@ Cloning Your PostgreSQL Source
 
    .. figure:: images/17a.png
 
-**Create** をクリック
+#. **Create** をクリック
 
 #. 進行状況をモニターするためにドロップダウンメニューの **Operations** を選択してください。 この処理には5分ほどかかります
 
-#. スナップショット作業が完了したら、 **Era > Time Machines**から自分の基となるデータベース(*Initials*\_LabDB_tm)を選択し、  **Actions** > **Clone Database** をクリックします
+#. スナップショット作業が完了したら、 **Era > Time Machines** から自分の基となるデータベース(*Initials*\_LabDB_tm)を選択し、  **Actions** > **Clone Database** をクリックします
 
 #. **Time** タブから **Snapshot > First** を選択
 

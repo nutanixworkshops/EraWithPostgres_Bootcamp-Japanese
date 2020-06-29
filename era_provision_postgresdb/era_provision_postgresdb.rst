@@ -43,7 +43,7 @@ EraはAHVやESXい上にインストール可能な仮想アプリケーショ�
    - **Username** - admin
    - **Password** - nutanix/4u
 
-#. **Dashbord**のドロップダウンメニューから **Administration** を選択します。
+#. **Dashbord** のドロップダウンメニューから **Administration** を選択します。
 
 #. **Cluster Details** 内で、Eraがあなたに割り当てられたクラスタ用に設定されていることを確認してください。
 
@@ -72,7 +72,7 @@ EraはAHVやESXい上にインストール可能な仮想アプリケーショ�
 
    .. figure:: images/3f2.png
 
-#. 設定されたNetworksを確認します。もし**VLANs Available for Network Profiles** 内にNeteorksが見当たらない場合は、**Add** をクリック。 **Secondary** VLANを選択して **Add** をクリック
+#. 設定されたNetworksを確認します。もし **VLANs Available for Network Profiles** 内にNeteorksが見当たらない場合は、**Add** をクリック。 **Secondary** VLANを選択して **Add** をクリック
 
    .. note::
 

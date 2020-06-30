@@ -7,7 +7,7 @@ Provision Postgres DB
 Overview
 ++++++++
 
-The initial release of Era supports the following Operating Systems and Database Servers:
+初期リリースのEraでは次のOSとデータベースサーバをサポートしています。
 
 - CentOS 6.9, 7.2, and 7.3
 - Oracle Linux 7.3
@@ -17,83 +17,84 @@ The initial release of Era supports the following Operating Systems and Database
 - PostgreSQL 9.x and 10.x
 - SQL Server 2008 R2, SQL Server 2012, SQL Server 2014, SQL Server 2016, and SQL Server 2017
 
-Era can be used to provision database servers and databases on the registered Nutanix cluster, or you can register an existing source database running on the cluster. In this lab, you will provision a new PostgreSQL database server and database.
+Eraは登録されたNutanixクラスタ上にデータベースサーバやデータベースを展開提供でき、あるいは既存のデータベースをクラスタ上で運用することも出来ます。
 
 .. note::
 
-  Estimated time to complete: **30 MINUTES**
+  予想される所要時間は **30分**
 
-This lab will show you how to provision, connect, and view a Postgres Database.
+このラボではPostgres Databaseの展開と接続、表示方法をお見せします。
 
-Exploring Era Resources
+Era Resourcesの探索
 +++++++++++++++++++++++
 
-Era is distributed as a virtual appliance that can be installed on either AHV or ESXi. For the purposes of conserving memory resources, a shared Era server has already been deployed on your cluster.
+EraはAHVやESXい上にインストール可能な仮想アプリケーションとして提供されています。メモリリソースの節約のために共有Eraサーバが既にあなたのクラスタ上に展開されています。
 
 .. note::
 
-   If you're interested, instructions for the brief installation of the Era appliance can be found `here <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Era-User-Guide-v12:era-era-installing-on-ahv-t.html>`_.
+   Eraアプライアンスに興味のある方は `こちら <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Era-User-Guide-v12:era-era-installing-on-ahv-t.html>`_.
 
-#. In **Prism Central > VMs > List**, identify the IP address assigned to the **EraServer-\*** VM using the **IP Addresses** column.
+#. **Prism Central > VMs > List** 内で、**IP Addresses** 列を使って **EraServer-\*** VMに割り当てられたIPアドレスを確認します。
 
-#. Open \https://*ERA-VM-IP:8443*/ in a new browser tab.
+#. \https://*ERA-VM-IP:8443*/ を新しいブラウザダブで開く
 
-#. Login using the following credentials:
+#. 以下の承認情報を使ってログインします
 
    - **Username** - admin
    - **Password** - nutanix/4u
 
-#. From the **Dashboard** dropdown, select **Administration**.
+#. **Dashbord** のドロップダウンメニューから **Administration** を選択します。
 
-#. Under **Cluster Details**, note that Era has already been configured for your assigned cluster.
+#. **Cluster Details** 内で、Eraがあなたに割り当てられたクラスタ用に設定されていることを確認してください。
 
    .. figure:: images/6.png
 
-#. Select **Era Resources** from the left-hand menu.
+左側のメニューから **Era Resources** を選択
 
-#. In **Era**, select **Profiles** from the dropdown menu and **Software**  from the lefthand menu.
+#. **Era** のドロップダウンメニューから **Profiles** を選び、左側のメニューの **Software** を選択
 
    .. figure:: images/3g.png
 
-#. Note there are included profiles for **PostgreSQL 10.4** and **MariaDB 10.3** shipped with Era.
+#. **PostgreSQL 10.4** と **MariaDB 10.3** はEraに同梱されています
 
-   Additional PostgreSQL, MariaDB, SQL Server, and Oracle profiles can be created by registering database server VMs with Era.
+  Era.追加のPostgreSQL、 MariaDB、 SQL Server、及びOracleプロファイルはEraでデータベースサーバVMを登録することで作成できます。
 
-#. Select **Compute > DEFAULT_OOB_COMPUTE** and note the default Compute Profile creates a 4 core, 32GiB RAM VM to host the database. To reduce memory consumption in the shared lab environment, you will create a custom Compute Profile.
+#. **Compute > DEFAULT_OOB_COMPUTE** を選択してデフォルトのConpute Profile が4コア、32GiBRAMのデータベースホスト用のVM
+  を作成することを確認してください
 
-#. Click **+ Create** and fill out the following fields:
+#. **+ Create** をクリックして以下の項目を埋める:
 
-   - **Name** - *Initials*\ -Lab
-   - **Description** - Lab Compute Profile
-   - **vCPUs** - 1
-   - **Cores per CPU** - 2
-   - **Memory (GiB)** - 16
+- **Name** - *Initials*\ -Lab
+- **Description** - Lab Compute Profile
+- **vCPUs** - 1
+- **Cores per CPU** - 2
+- **Memory (GiB)** - 16
 
    .. figure:: images/3f2.png
 
-#. Review the configured Networks. If no Networks show under **VLANs Available for Network Profiles**, click **Add**. Select **Secondary** VLAN and click **Add**.
+#. 設定されたNetworksを確認します。もし **VLANs Available for Network Profiles** 内にNeteorksが見当たらない場合は、**Add** をクリック。 **Secondary** VLANを選択して **Add** をクリック
 
    .. note::
 
-      Leave **Manage IP Address Pool** unchecked, as we will be leveraging the cluster's IPAM to manage addresses
+      今回はアドレス管理にクラスタのIPAMを用いるので、**Manage IP Address Pool** のチェックは外したままにします、
 
    .. figure:: images/era_networks_001.png
 
-#. From the dropdown menu, select **SLAs**.
+#. ドロップダウンメニューから **SLAs** を選択
 
    .. figure:: images/7a.png
 
-   Era has five built-in SLAs (Gold, Silver, Bronze, Zero, and Brass). SLAs control how the database server is backed up. This can be with a combination of Continuous Protection, Daily, Weekly Monthly and Quarterly protection intervals.
+   Eraには5つのSLAが組み込まれています(Gold, Silver, Bronze, Zero, and Brass)。SLAはデータベースサーバのバックアップ方法を制御し、継続的な保護や日毎、週毎、月毎、四半期毎の保護間隔を組み合わせることが出来ます。
 
-#. From the dropdown menu, select **Profiles**.
+#. ドロップダウンメニューから **Profiles** を選択
 
-   Profiles pre-define resources and configurations, making it simple to consistently provision environments and reduce configuration sprawl. For example, Compute Profiles specifiy the size of the database server, including details such as vCPUs, cores per vCPU, and memory.
+   プロファイルはリソースや設定を予め定義して環境の供給を一貫してシンプルにし、設定が煩雑になることを抑制します。例えば、Compute ProfilesはデータベースサーバのサイズをvCPUsやそのコア、メモリなどの詳細を考慮して決定できます。
 
-#. If you do not see any networks defined under **Network**, click **+ Create**.
+#. **Network** 内に定義されたネットワークが無い場合、**+ Create** をクリック
 
    .. figure:: images/8.png
 
-#. Fill out the following fields and click **Create**:
+#. 以下の項目を埋めて、 **Create** をクリック
 
    - **Engine** - PostgreSQL
    - **Name** - Primary-PGSQL-NETWORK
@@ -104,13 +105,13 @@ Era is distributed as a virtual appliance that can be installed on either AHV or
 Provisioning a PostgreSQL Database
 ++++++++++++++++++++++++++++++++++
 
-You've completed all the one time operations required to be able to provision any number of DB Server VMs. Follow the steps below to provision a database of a fresh database server, with best practices automatically applied by Era.
+これでDB Server VMを用意するために必要なワンタイムオペレーションは完了しました。以下の手順に従って新しいデータベースを用意してください。Eraの適応によって必然的に最高の実践経験を得られます。
 
-#. In **Era**, select **Databases** from the dropdown menu and **Sources** from the lefthand menu.
+#. **Era** 内のドロップダウンメニューから **Databases** を選び、左側のメニューから **Sources** を選択
 
-#. Click **+ Provision > Single Node Database**.
+#. **+ Provision > Single Node Database** をクリック
 
-#. In the **Provision a Database** wizard, fill out the following fields to configure the Database Server:
+#. Database Serverの設定のために **Provision a Database** ウィザード内で以下の項目を埋めてください
 
    - **Engine** - PostgresSQL
    - **Database Server** - Select **Create New Server**
@@ -128,13 +129,13 @@ You've completed all the one time operations required to be able to provision an
 
    .. note::
 
-     The above SSH public key is provided as an example and is configured as an authorized key for the operating system provisioned by Era. In a non-lab setting you would create your own SSH private/public keypair and provide the public key during this step.
+     上記のSSHキーは例としてEraから用意されているOS向けの認証キーとして提供されています。実際には自分で秘密キーと公開キーを作成してこのステップのときに提供します。
 
    .. figure:: images/4d2.png
 
-#. Click **Next**.
+#. **Next** クリック
 
-#. Fill out the following **Database** fields:
+#. 以下の **Database** の項目を埋める
 
    - **Database Name** - *Initials*\_LabDB
    - **Description** - (Optional) Description
@@ -145,13 +146,13 @@ You've completed all the one time operations required to be able to provision an
 
    .. note::
 
-     Era also offers to ability to run scripts or commands both before and after database creation . These can be used to further customize an environment based on specific enterprise needs.
+     Eraはスクリプトやコマンドをデータベースの作成の前後に実行する機能を提供しています。この機能によって企業のニーズに合わせて環境をカスタマイズすることが出来ます。
 
    .. figure:: images/4e2.png
 
-#. Click **Next**.
+#. **Next** をクリック
 
-#. Fill out the following **Time Machine** fields:
+#. 以下の **Time Machine** の項目を埋めてください
 
    - **Name** - *Initials*\_LabDB_tm
    - **Description** - (Optional) Description
@@ -160,50 +161,52 @@ You've completed all the one time operations required to be able to provision an
 
    .. figure:: images/4f2.png
 
-#. Click **Provision**.
+#. **Provision** をクリック
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 5 minutes.
+#. ドロップダウンメニューから **Operations** を選択して処理状況をモニターしてください。 この処理には5分程かかります
 
    .. note::
 
-     All operations within Era have unique IDs are fully visible for logging/auditing.
+     Eraの全てのオペレーションは完全なログや監視のために固有のIDをあたえられています。
 
    .. figure:: images/4g2.png
 
-#. Upon completion, select **Dashboard** from the drop down menu and note your new **Source Database**.
+#. 完了後、ドロップダウンメニューから **Dashboard** を選び新しい自分の **Source Database** を確認します
 
    .. figure:: images/4i2.png
 
-   You should also be able to see the *Initials*\ -PostgresSQL VM running within Prism.
+   Prismで*Initials*\ -PostgresSQL VMが動作していることを見ることができます
 
-Connecting to the Database
+
+Databaseへの接続
 ++++++++++++++++++++++++++
 
-Now that Era has successfully provisioned a database instance, you will connect to the instance and verify the database was created.
+Eraがデータベースの用意を完了したので、実際に接続してデータベースが作成されたか確かめてみましょう。
 
-#. In **Era**, select **Databases** from the drop down menu.
+#. **Era** 内のドロップダウンメニューから **Databases** を選択
 
-#. Under **Sources**, click the name of your database.
+#. **Sources** 内で自分のデータベース名を選択
 
    .. figure:: images/5a2.png
 
-#. Note the IP Address of your **Database Server**.
+#. 自分の **Database Server** のIPアドレスを確認する
+
 
    .. figure:: images/5b.png
 
-#. Using *Initials*\ **-WinToolsVM**, open **pgAdmin**.
+#. *Initials*\ **-WinToolsVM** を使って **pgAdmin** を開く
 
    .. note::
 
-     If installed, you can also use a local instance of pgAdmin. The Tools VM is provided to ensure a consistent experience.
+     インストールされているならpgAdminのインスタンスを使えます。ToolVMは安定した一連の操作を保証するために提供されています。
 
-#. Under **Browser**, right-click **Servers** and select **Create > Server...**.
+#. **Browser** 内で **Servers** を右クリックし、**Create > Server...** を選択
 
    .. figure:: images/5c.png
 
-#. On the **General** tab, provide your database server name (e.g. *Initials*-**DBServer**).
+#. **General** タブで自分のデータベースサーバの名前をつけます( *Initials*-**DBServer** など
 
-#. On the **Connection** tab, fill out the following fields:
+#. **Connection** タブで以下の項目を埋める
 
    - **Hostname/IP Address** - *Initials*\ -PostgresSQL
    - **Port** - 5432
@@ -213,31 +216,31 @@ Now that Era has successfully provisioned a database instance, you will connect 
 
    .. figure:: images/5d2.png
 
-#. Expand *Initials*\ **-DBServer > Databases** and note an empty database has been created by Era.
+#. *Initials*\ **-DBServer > Databases** を展開し、Eraで作成された空のデータベースがあることを確認してください。
 
    .. figure:: images/5h2.png
 
 ..  Now you will create a table to store data regarding Names and Ages.
 
-  Expand *Initials*\_**labdb** **> Schemas > public**. Right-click on **Tables** and select **Create > Table**.
+  *Initials*\_**labdb** **> Schemas > public** と展開し、**Tables** を右クリックし**Create > Table** を選択
 
   .. figure:: images/5e.png
 
-  On the **General** tab, enter **table1** as the **Name**.
+  **General** タブで **Name** に **table1** と入力
 
-  On the **Columns** tab, click **+** and fill out the following fields:
+  **Columns** タブで **+** をクリックし以下の項目を埋める
 
   - **Name** - Id
   - **Data type** - integer
   - **Primary key?** - Yes
 
-  Click **+** and fill out the following fields:
+  **+** をクリックし以下の様に項目を埋める
 
   - **Name** - Name
   - **Data type** - text
   - **Primary key?** - No
 
-  Click **+** and fill out the following fields:
+  **+** をクリックし以下の様に項目を埋める
 
   - **Name** - Age
   - **Data type** - integer
@@ -245,32 +248,27 @@ Now that Era has successfully provisioned a database instance, you will connect 
 
   .. figure:: images/5f.png
 
-  Click **Save**.
+  **Save** をクリック
 
-  Using your **Tools VM**, open the following link to download a .CSV file containing data for your database table: http://ntnx.tips/EraTableData
+  **Tools VM** を使い、以下のリンクから、自分のデータベーステーブルに使うデータを含む.CSVファイルをダウンロード: http://ntnx.tips/EraTableData
 
-  Using **pgAdmin**, right-click **table1** and select **Import/Export**.
+  **pgAdmin** を使い、**table1** を右クリックして **Import/Export** を選択
 
-  Toggle the **Import/Export** button to **Import** and fill out the following fields:
+  **Import/Export** ボタンを **Import** に切り替えて、以下の項目を埋める
 
   - **Filename** - C:\\Users\\Nutanix\\Downloads\\table1data.csv
   - **Format** - csv
 
   .. figure:: images/5g.png
 
-  Click **OK**.
+  **OK** をクリック
 
-  You can view the imported data by right-clicking **table1** and selecting **View/Edit Data > All Rows**.
+  **table1** を右クリックし**View/Edit Data > All Rows** と選択するとインポートしたテータを閲覧できます
 
-  Takeaways
+ まとめ
   +++++++++
-
-  - Era 1.0 supports Oracle, SQL Server, and PostgreSQL. MySQL will be supported in an upcoming release.
-
-  - Era supports One Click operations for registering, provisioning, cloning and refreshing supported databases.
-
-  - Era enables the same type of simplicity and operating efficiency that you would expect from a public cloud while allowing DBAs to maintain control.
-
-  - Era automates complex database operations – slashing both DBA time and the cost of managing databases with traditional technologies and saving immensely on enterprise OpEx.
-
-  - Era enables database admins to standardize their database deployments across database engines and automatically incorporate database best practices.
+  - Era1.0はOracle、SQL Server、PostgreSQLをサポートします。MySQLは近日サポート予定です
+  - EraはOne-Clickオペレーションでの対応データベースの登録、提供、複製、更新をサポートします
+  - Eraはパブリッククラウドに期待されるのと同様のシンプルさや運用効率を持ち、DBAの持続的なコントロールを可能にします。
+  - Eraは複雑なデータベース運用を自動化します - DBAの時間やデータベース管理のコストを削減し従来の仕様のまま削減し、企業の負担を大幅に抑えます
+  - Eraはデータベースエンジンを跨いでデータベース展開を標準化し、自動的なデータベース運用の最適化をデータベース管理者に提供します

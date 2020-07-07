@@ -26,7 +26,7 @@
 
   tools_vms/windows_tools_vm
   tools_vms/linux_tools_vm
-  appendix/用語集
+  appendix/glossary
 
 .. _getting_started:
 

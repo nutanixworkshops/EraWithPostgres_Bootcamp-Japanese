@@ -9,40 +9,44 @@ Overview
 
 .. note::
 
-  Estimated time to complete: **30 MINUTES**
+  所要時間は30分の予定
 
-This lab will show you how to clone, and refresh a Database.
+このラボではデータベースのクローンとリフレッシュについてお見せします。
 
 Cloning Your PostgreSQL Source
 ++++++++++++++++++++++++++++++
 
-Now that you have created a source database, you can easily clone it using Era Time Machine. Database clones are helpful for development and testing purposes, allowing non-production environments to utilize product data without impacting production operations. Era clones utilize Nutanix-native copy-on-write cloning technology, allowing for zero-byte database clones. This space efficiency can significantly lower storage costs for environments supporting large numbers of database clones.
+ソースデータベースを作成したので、Era Time Machineを使用して簡単にデータベースをクローンすることできます。
+データベースのクローンは、開発とテストのために役立ち、検証環境などで商用環境に影響を与えることなく商用環境と同じデータを利用できます。
+EraのクローンはNutanixネイティブのリダイレクトオンライトテクノロジーを利用しており、ゼロバイトのデータベースクローンが可能です。
+このスペース効率により、多数のデータベースクローンをサポートする環境のストレージコストを大幅に削減できます。
 
-#. In **Era**, select **Time Machines**, select the Time Machine instance for your source database (*Initials*\_LabDB_tm).
+#. 自分のデータベースを **Era** の **Time Machines** から選択してみましましょう(*Initials*\_LabDB_tm)
 
    .. figure:: images/16a2.png
 
-#. Click **Actions** > **Snapshot** and enter **First** as the **Snapshot Name**.
+#. **Actions** > **Snapshot** と選択し、**First** で **Snapshot Name** を選択します
 
    .. figure:: images/17a.png
 
-#. Click **Create**.
+#. **Create** をクリック
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 5 minutes.
+#. 進行状況をモニターするためにドロップダウンメニューの **Operations** を選択してください。 この処理には5分ほどかかります
 
-#. After the snapshot job completes, select the Time Machine instance for your source database (*Initials*\_LabDB_tm) in **Era > Time Machines** and click **Actions** > **Clone Database**.
+#. スナップショット作業が完了したら、 **Era > Time Machines** からソースデータベース(*Initials*\_LabDB_tm)を選択し、**Actions** > **Clone Database** をクリックします
 
-#. On the **Time** tab, select **Snapshot > First**.
+#. **Time** タブから **Snapshot > First** を選択
 
    .. note::
 
-     Without creating manual snapshots, Era also offers the ability to clone a database based on **Point in Time** increments including Continuous (Every Second), Daily, Weekly, Monthly, or Quarterly. Availability is controlled by the SLA of the source.
+   Eraは、手動でスナップショットを作成せずに、継続的（毎秒）、毎日、毎週、毎月、または四半期を含むポイントインタイムの増分に基づいてデータベースをクローンする機能も提供します。
+   可用性はソースのSLAによって制御されます。
 
    .. figure:: images/19a2.png
 
-#. Click **Next**.
+#. **Next** をクリック
 
-#. On the **Database Server** tab, fill out the following fields:
+#. **Database Server** タブで以下の項目を埋める
 
    - **Database Server** - Create New Server
    - **Database Server Name** - *Initials*-PostgresSQL_Clone
@@ -56,9 +60,9 @@ Now that you have created a source database, you can easily clone it using Era T
 
    .. figure:: images/20a2.png
 
-#. Click **Next**.
+#. **Next** をクリック
 
-#. On the **Database Server** tab, fill out the following fields:
+#. **Database Server** タブで以下の項目を埋める
 
    - **Name** - *Initials*\_LabDB_Clone
    - **Description** - (Optional) Description
@@ -67,30 +71,30 @@ Now that you have created a source database, you can easily clone it using Era T
 
    .. figure:: images/21a2.png
 
-#. Click **Clone**.
+#. **Clone** をクリック
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 5-10 minutes.
+#. ドロップダウンメニューから **Operations** を選択し進行状況をモニターしてください。 この処理には5-10分分かかります
 
-#. While waiting for the clone to complete, explore **Era > SLAs** to understand the differences between standard SLAs offered by Era, or create your own custom SLA.
+#. クローンしている間に、**Era > SLAs** を見てEraが提供する標準的なSLAと自分でカスタマイズしたSLAの違いを理解してください
 
    .. figure:: images/21b.png
 
-#. Following the completion of the clone operation, you can connect to the clone instance as described in the previous section, `Connecting to the Database`_.
+#. クローンが完了したら、その作成したクローンに接続できます
 
    .. figure:: images/23a2.png
 
-   The newly provisioned clone is now ready to be used.
+   新しいクローンが利用可能です
 
-Refreshing A Cloned Database
+クローンされたデータベースのリフレッシュ
 ++++++++++++++++++++++++++++
 
-The ability to easily refresh a cloned database using new data from the source database improves development, test, and other use cases by ensuring they have access to new and relevant data. In this section you will add a new table for storing data to your source database, and refresh the existing clone.
+開発の中で新しいデータを使ってデータベースのクローンを簡単に更新するためには、検証や他の関連する新しいデータへのアクセスを確実にすることで改善することができます。この章ではソースデータベースの新しいテーブルの格納とそのクローンの更新をします。
 
-#. In **pgAdmin**, select your source database (**NOT** the cloned database), and from the menu bar click **Tools > Query Tool** (Maximizing the PGAdmin may be helpful to see the Tools Menu).
+#. **pgAdmin** でソースデータベース(クローンでない)を選択し、メニューバーから **Tools > Query Tool** とクリックします(PGAdminを最大化するとToolMenuをが見やすいかもしれません)
 
    .. figure:: images/25a2.png
 
-#. From the **Query Tool**, type the following SQL command into the editor:
+#. **Query Tool** から以下のSQLコマンドをエディタに入力します
 
    .. code-block:: postgresql
      :name: products-table-sql
@@ -101,59 +105,55 @@ The ability to easily refresh a cloned database using new data from the source d
      price numeric
      );
 
-#. Click :fa:`bolt` **Execute/Refresh**.
+#. :fa:`bolt` **Execute/Refresh** をクリック
 
    .. figure:: images/26a.png
 
-#. Verify the creation of the table under **Schemas > Public > Tables > products**.
+#. **Schemas > Public > Tables > products** からテーブルが作成されたことを確認します
 
    .. note::
 
-     You may need to refresh **Tables** for the newly created table to appear.
+     新しく作成したテーブルを表示するには **Table** の更新が必要です
 
    .. figure:: images/27a2.png
 
-   Previously you created a manual snapshot on which to base your cloned database, for the refresh you will leverage the **Point in Time** capability of Era.
+   前回は手動でデータベースのスナップショットを作成しましたが、今回はEraの **Point in Time** 機能を使って更新します
 
-   The default schedule for **Log Catch Up**, configured when provisioning the source database, is every 30 minutes. Based on this schedule, you should expect to be able to refresh the database based on updates older than 30 minutes with no further action required.
+   デフォルトの **Log Catch Up** 用のスケジュールでは、ソースデータベースが用意されたときから30分毎と設定されています。スケジュールに従って過去30分毎にアップデートされたデータベースを基にクローンを更新します、これ以上のアクションは不要です。
 
-   In this case, you just created the **products** table in your source database, so a manual execution of **Log Catch Up** would be required to copy transactional logs to Era from your source database.
+   この場合、ソースデータベースの**products**テーブルが作成されただけなので、ソースデータベースからEraにトランザクションログをコピーするには**Log Catch Up**を実行する必要があります。
 
-#. In **Era**, select **Time Machines**, select the Time Machine instance for your source database and click **Actions** > **Log Catch Up > Yes**.
+#. **Era** で **Time Machines** を選び、ソースデータベースのTime Machineインスタンスを選択して **Actions** > **Log Catch Up > Yes** をクリックします
 
    .. figure:: images/27c.png
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 5-10 minutes.
+#. ドロップダウンメニューから **Operations** を選択して処理状況をモニターします。 この処理には5-10分かかります
 
-#. Once the **Log Catchup** job completes, select **Databases > Clones**, select the clone of your source database and click **Refresh**.
+#. **Log Catchuo**処理が完了したら、**Databases > Clones** を選択し、ソースデータベースを選んで **Refresh** を選択する
 
    .. figure:: images/27b2.png
 
-#. Refreshing to the latest available **Point in Time** is selected by default. Click **Refresh**.
+#. デフォルトでは使用可能な最新の **Point in Time** に更新されます。**Refresh** をクリック
 
    .. figure:: images/27d.png
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 5-10 minutes.
+#. ドロップダウンメニューから **Operations** を選択して処理状況をモニターします。 この処理には5-10分かかります
 
-#. Once the **Refresh Clone** job is complete, refresh the **Tables** view of your clone database in **pgAdmin** and confirm the **products** table is now present.
+#. **Refresh Clone** 処理が完了したら、 **pgAdmin** で自分のクローンデータベースの **Tables** の表示を更新して、**products** テーブルが存在することを確認します
 
    .. figure:: images/28a2.png
 
-   In just a couple of clicks and minutes you were able to update your cloned database using the latest available production data. This same approach could be leveraged to recover absent data from a database by provisioning a clone based on a previous snapshot or point in time.
+   数回のクリックと数分の所要時間で最新の実データを使ったクローンデータベースの更新が出来ました。これはスナップショットや復元ポイントから失ったデータを復元させるためにも使えるアプローチです。
 
-#. Return to the **Dashboard** and review the critical information Era provides to administrators, including storage savings, clone aging, tasks, and alerts.
+#. **Dashboard** に戻って管理者向けの重要情報、ストレージの節約情報、クローンの世代管理、タスク、アラートなどを確認してください。
 
    .. figure:: images/28b2.png
 
-Takeaways
+まとめ
 +++++++++
 
-- Era supports One Click operations for registering, provisioning, cloning and refreshing supported databases.
-
-- Era enables the same type of simplicity and operating efficiency that you would expect from a public cloud while allowing DBAs to maintain control.
-
-- Era automates complex database operations – slashing both DBA time and the cost of managing databases with traditional technologies and saving immensely on enterprise OpEx.
-
-- Era enables database admins to standardize their database deployments across database engines and automatically incorporate database best practices.
-
-- Era enable DBAs to clone their environments to the latest application-consistent transaction.
+- Eraはデータベースの登録、プロビジョニング、クローン作成、およびリフレッシュのための1-Click操作をサポートしています。
+- Eraはデータベース管理者がコントロール性を維持しながら、パブリッククラウドに期待するのと同様のシンプルさと運用の効率性を実現します。
+- Eraは複雑なデータベース操作を自動化します。従来のテクノロジーでは課題になっていたデータベースを管理するためのデータベース管理者の時間とコストの両方を削減し、エンタープライズOpExを大幅に節約します。
+- Eraを使用するとデータベース管理者はデータベースエンジン全体でデータベースのデプロイメントを標準化し、データベースのベストプラクティスを自動的に組み込むことができます。
+- Eraは、データベース管理者がアプリケーション整合性のあるトランザクション環境をクローンできるようにします。
